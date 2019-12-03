@@ -39,7 +39,6 @@ func simulate(codes []int) int{
 			if(getFirst(codes) == 19690720){
 				return i * 100 + j
 			}
-			
 		}
 	}
 	return 0
@@ -58,5 +57,4 @@ func main(){
 	}
 
 	fmt.Println(simulate(codes))
-	
 }
