@@ -1,5 +1,14 @@
+*
+!*/
+!*.*
+
 .vscode/
+
 *.out
 *.exe
 in.txt
 out.txt
+
+#ghc binaries
+*.o
+*.hi
