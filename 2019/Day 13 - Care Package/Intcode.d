@@ -8,7 +8,6 @@ import std.algorithm;
 import std.conv;
 import std.stdio;
 
-
 class Intcode {
     BigInt[] codes;
     int rb; 
@@ -24,13 +23,11 @@ class Intcode {
     BigInt getParam(int ind, int mode){
         switch(mode){
             case 0:
-                return codes[codes[ind].toLong()];
-                break;
+                return codes[codes[ind].toLong()]; break;
             case 1:
-                return codes[ind];
-                break;
+                return codes[ind]; break;
             case 2:
-                return codes[rb + codes[ind].toLong()];
+                return codes[rb + codes[ind].toLong()]; break;
             default: break;
         }
         return BigInt(0);
@@ -39,14 +36,11 @@ class Intcode {
     void setParam(int ind, int mode, BigInt val){
         switch(mode){
             case 0: 
-                codes[codes[ind].toLong()] = val;
-                break;
+                codes[codes[ind].toLong()] = val; break;
             case 1: 
-                codes[ind] = val;
-                break;
+                codes[ind] = val; break;
             case 2: 
-                codes[rb + codes[ind].toLong()] = val;
-                break;
+                codes[rb + codes[ind].toLong()] = val; break;
             default: break;
         }
     }
@@ -57,8 +51,7 @@ class Intcode {
         
         while(true){
             if(codes[i] % 100 == 99){
-                return BigInt(-99999999);
-                break;
+                return BigInt(-99999999); break;
             }
             auto op = codes[i] % 10;
             auto mode = format("%d",codes[i]).split("").map!(x => to!int(x)).array().reverse.drop(2);

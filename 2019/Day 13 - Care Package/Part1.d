@@ -1,5 +1,3 @@
-module 2019.Day 13.Part1-Copy;
-
 import std.stdio;
 import std.array: array;
 import std.conv;
@@ -10,7 +8,6 @@ import std.format: format;
 import intcode;
 
 void main(string[ ] args){
-    auto hello = "1,2,4";
     auto file = File("in.txt", "r"); // put input in .txt file
     auto codes = file.readln().split(',').map!(x => BigInt(strip(x)));
     Intcode intcode = new Intcode(codes.array);
@@ -26,7 +23,5 @@ void main(string[ ] args){
     }
 
     writeln(ans);
-
     file.close();
-    
 }
