@@ -43,10 +43,10 @@ int main() {
         }
     }
     vector<long long> basins;
+    vector<vector<bool>> visited = vector<vector<bool>>(grid.size(), vector<bool>(grid[0].size(), false)); // one location belongs to one basin
     for(auto it = lowPoints.begin(); it != lowPoints.end(); it++){
         auto [si, sj] = *it;
         queue<pair<int,int>> q;
-        vector<vector<bool>> visited = vector<vector<bool>>(grid.size(), vector<bool>(grid[0].size(), false));
         visited[si][sj] = true;
         long long count = 1;
         q.push(*it);
