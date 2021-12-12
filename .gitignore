@@ -6,6 +6,7 @@
 
 *.out
 *.exe
+*.txt
 in.txt
 out.txt
 
