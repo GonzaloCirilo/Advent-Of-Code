@@ -13,3 +13,5 @@ out.txt
 #ghc binaries
 *.o
 *.hi
+
+.DS_Store
