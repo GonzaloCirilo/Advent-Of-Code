@@ -1,10 +1,9 @@
 (defn getInput []
-    (with-open [rdr (clojure.java.io/reader "./in.txt")] ;;put input in in.txt file
-    (doall (map #(Integer/parseInt %) (line-seq rdr)))))
+    (doall (map #(Integer/parseInt %) (line-seq (java.io.BufferedReader. *in*))))) ;; reading lines from stdin
 
 (def arr (getInput))
-(doseq [a arr
-        b arr]
-    (def sum (+ a b))
-    (when (= sum 2020)
-        (println (* a b))))
+(println (reduce 1 (distinct (for 
+        [a arr
+         b arr
+         :let [sum (+ a b)]
+         :when (= sum 2020)] (* a b)))))
