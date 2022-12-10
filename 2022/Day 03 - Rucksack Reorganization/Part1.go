@@ -7,7 +7,7 @@ import (
 )
 
 // returns array of unique appearances of each character
-func getUniqueAppearances(line string) []int {
+func getUniqueAppearances(line string, c chan []int) {
 	appearances := make([]int, 52)
 	for _, token := range line {
 		ind := int(token) - int('a')
@@ -16,21 +16,23 @@ func getUniqueAppearances(line string) []int {
 		}
 		appearances[ind] = 1
 	}
-	return appearances
+	c <- appearances
 }
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	ans := 0
+	c := make(chan []int)
 	for scanner.Scan() {
 		line := scanner.Text()
 		left := line[:len(line)/2]
 		right := line[len(line)/2:]
-		appearLeft := getUniqueAppearances(left)
-		appearRight := getUniqueAppearances(right)
+		go getUniqueAppearances(left, c)
+		go getUniqueAppearances(right, c)
+		seg1, seg2 := <-c, <-c
 		repeat := -1
-		for i, a := range appearLeft {
-			if a+appearRight[i] > 1 {
+		for i, a := range seg1 {
+			if a+seg2[i] > 1 {
 				repeat = i
 			}
 		}
