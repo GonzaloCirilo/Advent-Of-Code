@@ -44,13 +44,10 @@ func main() {
 	c := make(chan int, 4)
 	for i := 1; i < len(grid)-1; i++ {
 		for j := 1; j < len(grid[i])-1; j++ {
-			go maxValue(grid[i][:j], c)
-			go maxValue(grid[i][j+1:], c)
-			go maxValue(rotGrid[j][:i], c)
-			go maxValue(rotGrid[j][i+1:], c)
-			//fmt.Println(grid[i][j] > left, grid[i][j] > right, grid[i][j] > top, grid[i][j] > bottom)
-			//fmt.Println(left, right, top, bottom)
-			//fmt.Println("===")
+			go maxValue(grid[i][:j], c)      //left
+			go maxValue(grid[i][j+1:], c)    // right
+			go maxValue(rotGrid[j][:i], c)   // top
+			go maxValue(rotGrid[j][i+1:], c) // bottom
 			a1, a2, a3, a4 := <-c, <-c, <-c, <-c
 			if grid[i][j] > a1 || grid[i][j] > a2 || grid[i][j] > a3 || grid[i][j] > a4 {
 				ans++
