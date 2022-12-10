@@ -6,14 +6,14 @@ import (
 	"os"
 )
 
-func maxValue(arr []int) int {
+func maxValue(arr []int, c chan int) {
 	temp := -1
 	for _, e := range arr {
 		if e > temp {
 			temp = e
 		}
 	}
-	return temp
+	c <- temp
 }
 
 func main() {
@@ -41,16 +41,18 @@ func main() {
 		//fmt.Println(rotGrid[i])
 	}
 	ans := 0
+	c := make(chan int, 4)
 	for i := 1; i < len(grid)-1; i++ {
 		for j := 1; j < len(grid[i])-1; j++ {
-			left := maxValue(grid[i][:j])
-			right := maxValue(grid[i][j+1:])
-			top := maxValue(rotGrid[j][:i])
-			bottom := maxValue(rotGrid[j][i+1:])
+			go maxValue(grid[i][:j], c)
+			go maxValue(grid[i][j+1:], c)
+			go maxValue(rotGrid[j][:i], c)
+			go maxValue(rotGrid[j][i+1:], c)
 			//fmt.Println(grid[i][j] > left, grid[i][j] > right, grid[i][j] > top, grid[i][j] > bottom)
 			//fmt.Println(left, right, top, bottom)
 			//fmt.Println("===")
-			if grid[i][j] > left || grid[i][j] > right || grid[i][j] > top || grid[i][j] > bottom {
+			a1, a2, a3, a4 := <-c, <-c, <-c, <-c
+			if grid[i][j] > a1 || grid[i][j] > a2 || grid[i][j] > a3 || grid[i][j] > a4 {
 				ans++
 			}
 		}

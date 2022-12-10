@@ -15,16 +15,17 @@ func reverse(arr []int) []int {
 	return aux
 }
 
-func countTrees(arr []int, h int) int {
+func countTrees(arr []int, h int, c chan int) {
 	//fmt.Println(arr, h)
 	count := 0
 	for _, e := range arr {
 		count++
 		if e >= h {
-			return count
+			c <- count
+			return
 		}
 	}
-	return count
+	c <- count
 }
 
 func main() {
@@ -51,16 +52,18 @@ func main() {
 		rotGrid = append(rotGrid, aux)
 	}
 	ans := 0
+	c := make(chan int, 4)
 	for i := 1; i < len(grid)-1; i++ {
 		for j := 1; j < len(grid[i])-1; j++ {
-			left := countTrees(reverse(grid[i][:j]), grid[i][j])
-			right := countTrees(grid[i][j+1:], grid[i][j])
-			top := countTrees(reverse(rotGrid[j][:i]), grid[i][j])
-			bottom := countTrees(rotGrid[j][i+1:], grid[i][j])
+			go countTrees(reverse(grid[i][:j]), grid[i][j], c)
+			go countTrees(grid[i][j+1:], grid[i][j], c)
+			go countTrees(reverse(rotGrid[j][:i]), grid[i][j], c)
+			go countTrees(rotGrid[j][i+1:], grid[i][j], c)
 			//fmt.Println(grid[i][j] > left, grid[i][j] > right, grid[i][j] > top, grid[i][j] > bottom)
 			//fmt.Println(left, right, top, bottom)
 			//fmt.Println("===")
-			score := left * right * top * bottom
+			a1, a2, a3, a4 := <-c, <-c, <-c, <-c
+			score := a1 * a2 * a3 * a4
 			if score > ans {
 				ans = score
 			}
