@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sync"
 )
 
 func reverse(arr []int) []int {
@@ -52,20 +53,37 @@ func main() {
 		rotGrid = append(rotGrid, aux)
 	}
 	ans := 0
-	c := make(chan int, 4)
+
+	var wg, ansWg sync.WaitGroup
+	wg.Add((len(grid) - 2) * (len(grid[0]) - 2))
+	ansCh := make(chan int)
 	for i := 1; i < len(grid)-1; i++ {
 		for j := 1; j < len(grid[i])-1; j++ {
-			go countTrees(reverse(grid[i][:j]), grid[i][j], c)    // left
-			go countTrees(grid[i][j+1:], grid[i][j], c)           // right
-			go countTrees(reverse(rotGrid[j][:i]), grid[i][j], c) // top
-			go countTrees(rotGrid[j][i+1:], grid[i][j], c)        // bottom
-			a1, a2, a3, a4 := <-c, <-c, <-c, <-c
-			score := a1 * a2 * a3 * a4
-			if score > ans {
-				ans = score
-			}
+			go func(i, j int) {
+				defer wg.Done()
+				c := make(chan int, 4)
+
+				go countTrees(reverse(grid[i][:j]), grid[i][j], c)    // left
+				go countTrees(grid[i][j+1:], grid[i][j], c)           // right
+				go countTrees(reverse(rotGrid[j][:i]), grid[i][j], c) // top
+				go countTrees(rotGrid[j][i+1:], grid[i][j], c)        // bottom
+				a1, a2, a3, a4 := <-c, <-c, <-c, <-c
+				score := a1 * a2 * a3 * a4
+				ansCh <- score
+			}(i, j)
 		}
 	}
-
+	go func() {
+		ansWg.Add(1)
+		defer ansWg.Done()
+		for x := range ansCh {
+			if x > ans {
+				ans = x
+			}
+		}
+	}()
+	wg.Wait()
+	close(ansCh)
+	ansWg.Wait()
 	fmt.Println(ans)
 }

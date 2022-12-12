@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sync"
 )
 
 func maxValue(arr []int, c chan int) {
@@ -41,21 +42,37 @@ func main() {
 		//fmt.Println(rotGrid[i])
 	}
 	ans := 0
-	c := make(chan int, 4)
+	var wg, ansWg sync.WaitGroup
+	wg.Add((len(grid) - 2) * (len(grid[0]) - 2))
+	ansch := make(chan int)
 	for i := 1; i < len(grid)-1; i++ {
 		for j := 1; j < len(grid[i])-1; j++ {
-			go maxValue(grid[i][:j], c)      //left
-			go maxValue(grid[i][j+1:], c)    // right
-			go maxValue(rotGrid[j][:i], c)   // top
-			go maxValue(rotGrid[j][i+1:], c) // bottom
-			a1, a2, a3, a4 := <-c, <-c, <-c, <-c
-			if grid[i][j] > a1 || grid[i][j] > a2 || grid[i][j] > a3 || grid[i][j] > a4 {
-				ans++
-			}
+			go func(i, j int) {
+				defer wg.Done()
+				c := make(chan int, 4)
+
+				go maxValue(grid[i][:j], c)      //left
+				go maxValue(grid[i][j+1:], c)    // right
+				go maxValue(rotGrid[j][:i], c)   // top
+				go maxValue(rotGrid[j][i+1:], c) // bottom
+				a1, a2, a3, a4 := <-c, <-c, <-c, <-c
+				if grid[i][j] > a1 || grid[i][j] > a2 || grid[i][j] > a3 || grid[i][j] > a4 {
+					ansch <- 1
+				}
+			}(i, j)
 		}
 	}
+	go func() {
+		ansWg.Add(1)
+		defer ansWg.Done()
+		for x := range ansch {
+			ans += x
+		}
+	}()
 
+	wg.Wait()
+	close(ansch)
 	ans += (len(grid)*2 + len(grid[0])*2) - 4
-
+	ansWg.Wait()
 	fmt.Println(ans)
 }
