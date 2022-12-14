@@ -15,19 +15,15 @@ type Point struct {
 func Min(a, b int) int {
 	if a < b {
 		return a
-	} else if b < a {
-		return b
 	}
-	return a
+	return b
 }
 
 func Max(a, b int) int {
 	if a > b {
 		return a
-	} else if b > a {
-		return b
 	}
-	return a
+	return b
 }
 
 func main() {
@@ -79,7 +75,6 @@ func main() {
 			moved := false
 			for i := range dx {
 				newPoint := Point{X: sPoint.X + dx[i], Y: sPoint.Y + dy[i]}
-				//fmt.Println(newPoint.Y, newPoint.X)
 				if grid[newPoint.Y][newPoint.X] != 0 {
 					continue
 				} else {

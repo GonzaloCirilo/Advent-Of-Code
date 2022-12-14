@@ -15,19 +15,15 @@ type Point struct {
 func Min(a, b int) int {
 	if a < b {
 		return a
-	} else if b < a {
-		return b
 	}
-	return a
+	return b
 }
 
 func Max(a, b int) int {
 	if a > b {
 		return a
-	} else if b > a {
-		return b
 	}
-	return a
+	return b
 }
 
 func main() {
@@ -42,12 +38,10 @@ func main() {
 		coord := strings.Split(line, " -> ")
 		points := make([]Point, 0)
 		var x, y int
-
 		for _, v := range coord {
 			fmt.Sscanf(v, "%d,%d", &x, &y)
 			caveFloor = Max(y, caveFloor)
 			points = append(points, Point{X: x, Y: y})
-
 		}
 
 		for i := 1; i < len(points); i++ {
@@ -62,7 +56,6 @@ func main() {
 					grid[points[i].Y][j] = 1
 				}
 			}
-
 		}
 	}
 	ans := 0
@@ -80,7 +73,6 @@ func main() {
 			moved := false
 			for i := range dx {
 				newPoint := Point{X: sPoint.X + dx[i], Y: sPoint.Y + dy[i]}
-				//fmt.Println(newPoint.Y, newPoint.X)
 				if grid[newPoint.Y][newPoint.X] != 0 || newPoint.Y >= caveFloor {
 					continue
 				} else {
@@ -99,6 +91,5 @@ func main() {
 			}
 		}
 	}
-
 	fmt.Println(ans)
 }
