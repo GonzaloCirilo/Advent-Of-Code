@@ -8,8 +8,7 @@ import (
 )
 
 type Point struct {
-	X int
-	Y int
+	X, Y int
 }
 
 func Min(a, b int) int {
@@ -26,6 +25,7 @@ func Max(a, b int) int {
 	return b
 }
 
+// 0 air, 1 rock, 2 sand
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	grid := make([][]int, 200)
