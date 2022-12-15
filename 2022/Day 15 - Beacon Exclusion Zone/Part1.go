@@ -24,7 +24,7 @@ func main() {
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		fmt.Println(line)
+		//fmt.Println(line)
 		var sx, sy, bx, by int
 		fmt.Sscanf(line, "Sensor at x=%d, y=%d: closest beacon is at x=%d, y=%d", &sx, &sy, &bx, &by)
 		manhattan = append(manhattan, ManhattanDist(sx, sy, bx, by))
